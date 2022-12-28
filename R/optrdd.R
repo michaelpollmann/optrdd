@@ -423,7 +423,7 @@ optrdd = function(X,
         t.hat = soln$solution[num.realized.0 + num.realized.1 + 1] / (2 * max.second.derivative^2)
         
     } else if (optimizer == "SCS" || optimizer == "ECOS") {
-      
+        stop("CVXR disabled -- Optimizer choice not valid.")
         if (verbose && optimizer == "SCS") {
             print(paste0("Running CVXR/SCS with problem of size: ",
                          dim(Amat)[1], " x ", dim(Amat)[2], "..."))
@@ -434,14 +434,14 @@ optrdd = function(X,
                          dim(Amat)[1], " x ", dim(Amat)[2], "..."))
         }
         
-        xx = CVXR::Variable(ncol(Amat))
+        # xx = CVXR::Variable(ncol(Amat))
         objective = sum(Dmat.diagonal/2 * xx^2 + dvec * xx)
         contraints = list(
             Amat[1:meq,] %*% xx == bvec[1:meq],
             Amat[(meq+1):nrow(Amat),] %*% xx >= bvec[(meq+1):nrow(Amat)]
         )
-        cvx.problem = CVXR::Problem(CVXR::Minimize(objective), contraints)
-        cvx.output = CVXR::solve(cvx.problem, solver = optimizer, verbose = verbose)
+        # cvx.problem = CVXR::Problem(CVXR::Minimize(objective), contraints)
+        # cvx.output = CVXR::solve(cvx.problem, solver = optimizer, verbose = verbose)
         
         if (cvx.output$status != "optimal") {
             warning(paste0("CVXR returned with status: ",
